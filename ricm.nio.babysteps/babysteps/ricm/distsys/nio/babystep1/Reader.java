@@ -50,6 +50,6 @@ public class Reader {
 	
 	public void processMsg(byte[] msg,SelectionKey key) {
 		writer.sendMsg(msg,key);
-		System.out.println("Message envoyé :" + msg.toString());
+		System.out.println("Message envoyé : " + new String(msg));
 	}
 }
