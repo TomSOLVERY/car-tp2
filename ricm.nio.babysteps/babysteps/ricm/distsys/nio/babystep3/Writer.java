@@ -40,7 +40,6 @@ public class Writer {
 			if (!lenBuffer.hasRemaining()) {
 				state = State.WritePayload;
 			}
-
 			break;
 		case WritePayload:
 			sc.write(ploadBuffer);

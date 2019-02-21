@@ -35,11 +35,6 @@ public class NioClient {
 	byte[] first;
 	byte[] digest;
 	int nloops;
-
-	/*
-	 Writer writer;
-	 Reader reader;
-	*/
 	 
 	
 	/**
@@ -123,11 +118,9 @@ public class NioClient {
 
 		// when connected, send a message to the server
 		digest = md5(first);
-		/*
-		writer = new Writer();
-		reader = new Reader(writer);
-		writer.sendMsg(first,key);
-		*/
+
+		// To use a channel, we actually need to attach it to a key
+		// and access it using this SelectionKey
 		key.attach(new Channel());
 		((Channel) key.attachment()).sendMsg(first, key);
 	}
@@ -141,7 +134,7 @@ public class NioClient {
 		assert (this.scKey == key);
 		assert (sc == key.channel());
 
-		// reader.handleRead(sc,key);
+		// access the channel using the SelectionKey
 		((Channel) key.attachment()).handleRead(sc, key);
 	}
 
@@ -154,7 +147,7 @@ public class NioClient {
 		assert (this.scKey == key);
 		assert (sc == key.channel());
 		
-		//writer.handleWrite(sc,key);
+		// access the channel using the SelectionKey
 		((Channel) key.attachment()).handleWrite(sc, key);
 	}
 

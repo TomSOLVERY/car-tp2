@@ -1,4 +1,4 @@
-package ricm.distsys.nio.babystep1;
+package ricm.distsys.nio.babystep2;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -49,7 +49,7 @@ public class Reader {
 	}
 	
 	public void processMsg(byte[] msg,SelectionKey key) {
-		writer.sendMsg(msg,key);
+		writer.sendMsg(msg,key); // For Ping Pong
 		System.out.println("Message envoyé : " + new String(msg));
 	}
 }

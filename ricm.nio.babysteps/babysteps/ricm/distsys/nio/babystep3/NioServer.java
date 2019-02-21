@@ -3,13 +3,11 @@ package ricm.distsys.nio.babystep3;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.channels.spi.SelectorProvider;
-import java.nio.charset.Charset;
 import java.util.Iterator;
 
 /**
@@ -26,11 +24,6 @@ public class NioServer {
 
 	// Unblocking selector
 	private Selector selector;
-	
-	/*
-	private Writer writer;
-	private Reader reader;
-	*/
 
 	/**
 	 * NIO server initialization
@@ -106,10 +99,7 @@ public class NioServer {
 		// in order to know when there are bytes to read
 		SelectionKey regkey = sc.register(this.selector, SelectionKey.OP_READ);
 		
-		/*
-		writer = new Writer();
-		reader = new Reader(writer);
-		*/
+		// Attach a channel to this key
 		regkey.attach(new Channel());
 	}
 
@@ -134,7 +124,8 @@ public class NioServer {
 
 		// get the socket channel for the client who sent something
 		SocketChannel sc = (SocketChannel) key.channel();
-		// reader.handleRead(sc,key);
+		
+		// access the channel using the SelectionKey
 		((Channel) key.attachment()).handleRead(sc, key);
 
 	}
@@ -152,25 +143,10 @@ public class NioServer {
 		// need to send something
 		SocketChannel sc = (SocketChannel) key.channel();
 		
-		//writer.handleWrite(sc, key);
+		// access the channel using the SelectionKey
 		((Channel) key.attachment()).handleWrite(sc, key);
 	}
 
-	/**
-	 * Send data
-	 * 
-	 * @param the key of the channel on which data that should be sent
-	 * @param the data that should be sent
-	 */
-	/*public void send(SocketChannel sc, byte[] data, int offset, int count) {
-		ByteBuffer buf;
-		buf = ByteBuffer.wrap(data, offset, count);
-
-		// register a write interest for the given client socket channel
-		SelectionKey key = sc.keyFor(selector);
-		key.interestOps(SelectionKey.OP_WRITE);
-		key.attach(buf);
-	}*/
 
 	public static void main(String args[]) throws IOException {
 		int serverPort = DEFAULT_SERVER_PORT;

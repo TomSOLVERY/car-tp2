@@ -1,4 +1,4 @@
-package ricm.distsys.nio.babystep1;
+package ricm.distsys.nio.babystep2;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -36,8 +36,9 @@ public class NioClient {
 	byte[] digest;
 	int nloops;
 
-	 Writer writer;
-	 Reader reader;
+	// Babystep2 new elements: a Reader and a Writer
+	Writer writer;
+	Reader reader;
 	/**
 	 * NIO client initialization
 	 * 
@@ -118,7 +119,8 @@ public class NioClient {
 		key.interestOps(SelectionKey.OP_READ);
 		
 
-		// when connected, send a message to the server
+		// when connected, create a reader and a writer first
+		// then send the message using the writer
 		digest = md5(first);
 		writer = new Writer();
 		reader = new Reader(writer);
@@ -134,31 +136,8 @@ public class NioClient {
 		assert (this.scKey == key);
 		assert (sc == key.channel());
 
+		// We delegate read handling to the reader now
 		reader.handleRead(sc,key);
-//		// Let's read the message
-//		 inBuffer = ByteBuffer.allocate(128);
-//		sc.read(inBuffer);
-//		
-//		byte[] data = new byte[inBuffer.position()];
-//		inBuffer.rewind();
-//		inBuffer.get(data);
-//
-//		// Let's make sure we read the message we sent to the server
-//		byte[] md5 = md5(data);
-//		if (!md5check(digest, md5)) 
-//			System.out.println("Checksum Error!");
-//		
-//		// Let's print the message we received, assuming it is a string
-//		// in UTF-8 encoding, since it is the format of our first message
-//		// we sent to the server.
-//		String msg = new String(data, Charset.forName("UTF-8"));
-//		System.out.println("NioClient received msg["+nloops+"]: " + msg);
-//
-//		nloops++;
-//		if (nloops < 100) {
-//			// send back the received message
-//			send(data, 0, data.length);
-//		}
 	}
 
 	/**
@@ -169,6 +148,8 @@ public class NioClient {
 	private void handleWrite(SelectionKey key) throws IOException {
 		assert (this.scKey == key);
 		assert (sc == key.channel());
+		
+		// We delegate write handling to the writer now
 		writer.handleWrite(sc,key);
 	}
 

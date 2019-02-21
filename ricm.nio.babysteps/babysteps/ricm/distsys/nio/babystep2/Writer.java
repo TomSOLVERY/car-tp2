@@ -1,4 +1,4 @@
-package ricm.distsys.nio.babystep1;
+package ricm.distsys.nio.babystep2;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -40,7 +40,6 @@ public class Writer {
 			if (!lenBuffer.hasRemaining()) {
 				state = State.WritePayload;
 			}
-
 			break;
 		case WritePayload:
 			sc.write(ploadBuffer);

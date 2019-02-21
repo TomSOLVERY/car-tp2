@@ -1,15 +1,13 @@
-package ricm.distsys.nio.babystep1;
+package ricm.distsys.nio.babystep2;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.channels.spi.SelectorProvider;
-import java.nio.charset.Charset;
 import java.util.Iterator;
 
 /**
@@ -26,6 +24,8 @@ public class NioServer {
 
 	// Unblocking selector
 	private Selector selector;
+	
+	// Babystep2 new elements: a Reader and a Writer
 	private Writer writer;
 	private Reader reader;
 
@@ -102,6 +102,8 @@ public class NioServer {
 		// register the read interest for the new socket channel
 		// in order to know when there are bytes to read
 		sc.register(this.selector, SelectionKey.OP_READ);
+		
+		// Also create a reader and a writer to handle communication
 		writer = new Writer();
 		reader = new Reader(writer);
 	}
@@ -127,21 +129,9 @@ public class NioServer {
 
 		// get the socket channel for the client who sent something
 		SocketChannel sc = (SocketChannel) key.channel();
+		
+		// We delegate read handling to the reader now
 		reader.handleRead(sc,key);
-
-//		ByteBuffer inBuffer = ByteBuffer.allocate(128);
-//		sc.read(inBuffer);
-//
-//		// process the received data
-//		byte[] data = new byte[inBuffer.position()];
-//		inBuffer.rewind();
-//		inBuffer.get(data,0,data.length);
-//		
-//		String msg = new String(data,Charset.forName("UTF-8"));
-//		System.out.println("NioServer received: " + msg);
-//
-//		// echo back the same message to the client
-//		send(sc, data, 0, data.length);
 	}
 
 	/**
@@ -156,24 +146,10 @@ public class NioServer {
 		// get the socket channel for the client to whom we
 		// need to send something
 		SocketChannel sc = (SocketChannel) key.channel();
+		
+		// We delegate write handling to the writer now
 		writer.handleWrite(sc, key);
 	}
-
-	/**
-	 * Send data
-	 * 
-	 * @param the key of the channel on which data that should be sent
-	 * @param the data that should be sent
-	 */
-	/*public void send(SocketChannel sc, byte[] data, int offset, int count) {
-		ByteBuffer buf;
-		buf = ByteBuffer.wrap(data, offset, count);
-
-		// register a write interest for the given client socket channel
-		SelectionKey key = sc.keyFor(selector);
-		key.interestOps(SelectionKey.OP_WRITE);
-		key.attach(buf);
-	}*/
 
 	public static void main(String args[]) throws IOException {
 		int serverPort = DEFAULT_SERVER_PORT;
