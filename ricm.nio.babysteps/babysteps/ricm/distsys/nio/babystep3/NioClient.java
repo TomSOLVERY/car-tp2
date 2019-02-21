@@ -41,7 +41,6 @@ public class NioClient {
 	 Reader reader;
 	*/
 	 
-	Channel channel; 
 	
 	/**
 	 * NIO client initialization
@@ -80,7 +79,6 @@ public class NioClient {
 		System.out.println("NioClient running");
 		while (true) {
 			selector.select();
-
 			// get the keys for which an event occurred
 			Iterator<?> selectedKeys = this.selector.selectedKeys().iterator();
 			while (selectedKeys.hasNext()) {
@@ -130,8 +128,8 @@ public class NioClient {
 		reader = new Reader(writer);
 		writer.sendMsg(first,key);
 		*/
-		channel = new Channel();
-		channel.sendMsg(first, key);
+		key.attach(new Channel());
+		((Channel) key.attachment()).sendMsg(first, key);
 	}
 
 	/**
@@ -144,7 +142,7 @@ public class NioClient {
 		assert (sc == key.channel());
 
 		// reader.handleRead(sc,key);
-		channel.handleRead(sc, key);
+		((Channel) key.attachment()).handleRead(sc, key);
 	}
 
 	/**
@@ -157,7 +155,7 @@ public class NioClient {
 		assert (sc == key.channel());
 		
 		//writer.handleWrite(sc,key);
-		channel.handleWrite(sc, key);
+		((Channel) key.attachment()).handleWrite(sc, key);
 	}
 
 	/**

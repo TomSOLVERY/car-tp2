@@ -27,9 +27,9 @@ public class Writer {
 		switch (state) {
 		case IDLE:
 			if (!messages.isEmpty()) {// check if messages not empty
-				lenBuffer.position(0);
+				lenBuffer.rewind();
 				lenBuffer.putInt(messages.get(0).capacity());
-				lenBuffer.position(0);
+				lenBuffer.rewind();
 				ploadBuffer = messages.get(0);
 				state = State.WriteLength;
 				messages.remove(0);

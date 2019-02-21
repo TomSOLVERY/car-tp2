@@ -31,8 +31,6 @@ public class NioServer {
 	private Writer writer;
 	private Reader reader;
 	*/
-	
-	Channel channel;
 
 	/**
 	 * NIO server initialization
@@ -106,13 +104,13 @@ public class NioServer {
 
 		// register the read interest for the new socket channel
 		// in order to know when there are bytes to read
-		sc.register(this.selector, SelectionKey.OP_READ);
+		SelectionKey regkey = sc.register(this.selector, SelectionKey.OP_READ);
 		
 		/*
 		writer = new Writer();
 		reader = new Reader(writer);
 		*/
-		channel = new Channel();
+		regkey.attach(new Channel());
 	}
 
 	/**
@@ -137,7 +135,7 @@ public class NioServer {
 		// get the socket channel for the client who sent something
 		SocketChannel sc = (SocketChannel) key.channel();
 		// reader.handleRead(sc,key);
-		channel.handleRead(sc, key);
+		((Channel) key.attachment()).handleRead(sc, key);
 
 	}
 
@@ -155,7 +153,7 @@ public class NioServer {
 		SocketChannel sc = (SocketChannel) key.channel();
 		
 		//writer.handleWrite(sc, key);
-		channel.handleWrite(sc, key);
+		((Channel) key.attachment()).handleWrite(sc, key);
 	}
 
 	/**
