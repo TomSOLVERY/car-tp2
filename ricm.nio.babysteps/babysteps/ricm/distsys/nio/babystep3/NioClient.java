@@ -12,6 +12,7 @@ import java.nio.channels.spi.SelectorProvider;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.util.Iterator;
+import java.util.Random;
 
 /**
  * NIO elementary client RICM4 TP F. Boyer
@@ -35,6 +36,8 @@ public class NioClient {
 	byte[] first;
 	byte[] digest;
 	int nloops;
+	
+	static int reps; // For messages with different size
 	 
 	
 	/**
@@ -71,7 +74,7 @@ public class NioClient {
 	 * channels - possible events are ACCEPT, CONNECT, READ, WRITE
 	 */
 	public void loop() throws IOException {
-		System.out.println("NioClient running");
+		System.out.println("NioClient running. Reps = " + reps);
 		while (true) {
 			selector.select();
 			// get the keys for which an event occurred
@@ -169,7 +172,12 @@ public class NioClient {
 	public static void main(String args[]) throws IOException {
 		int serverPort = NioServer.DEFAULT_SERVER_PORT;
 		String serverAddress = "localhost";
-		String msg = "Hello There...";
+		String ht = "Hello There...";
+		
+		Random r = new Random();
+		reps = r.nextInt(3) + 1;
+		
+		String msg = new String(new char[reps]).replace("\0", ht);
 		String arg;
 
 		for (int i = 0; i < args.length; i++) {
