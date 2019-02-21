@@ -1,1 +1,4 @@
-* ! babysteps/
+bin/
+.settings/
+.classpath
+.project
