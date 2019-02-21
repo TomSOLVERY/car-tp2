@@ -18,7 +18,7 @@ import java.util.Random;
  * NIO elementary client RICM4 TP F. Boyer
  */
 
-public class NioClient {
+public class NioClient implements Runnable{
 
 	// The channel used to communicate with the server
 	private SocketChannel sc;
@@ -194,7 +194,18 @@ public class NioClient {
 		byte[] bytes = msg.getBytes(Charset.forName("UTF-8"));
 		NioClient nc;
 		nc = new NioClient(serverAddress, serverPort, bytes);
-		nc.loop();
+		Thread t = new Thread(nc);
+		t.start();
+	}
+	
+	@Override
+	public void run() {
+		try {
+			this.loop();
+		} catch (IOException e) {
+			System.out.println("Exeption niveau run du Client");
+		}
+		
 	}
 
 	/*
@@ -232,5 +243,7 @@ public class NioClient {
 			ps.print(digest[i] + ", ");
 		ps.println();
 	}
+
+
 
 }

@@ -14,7 +14,7 @@ import java.util.Iterator;
  * NIO elementary server RICM4 TP F. Boyer
  */
 
-public class NioServer {
+public class NioServer extends Thread{
 
 	public static int DEFAULT_SERVER_PORT = 8888;
 
@@ -160,7 +160,15 @@ public class NioServer {
 		}
 		NioServer ns;
 		ns = new NioServer(serverPort);
-		ns.loop();
+		ns.start();
+	}
+	
+	public void run() {
+		try {
+			this.loop();
+		} catch (IOException e) {
+			System.out.println("Exeption niveau run du Server");
+		}
 	}
 
 }
