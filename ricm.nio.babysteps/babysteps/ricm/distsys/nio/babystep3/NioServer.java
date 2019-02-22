@@ -16,7 +16,7 @@ import java.util.Iterator;
 
 public class NioServer extends Thread{
 
-	public static int DEFAULT_SERVER_PORT = 8888;
+	public static int DEFAULT_SERVER_PORT = 7592;
 
 	// The channel used to accept connections from server-side
 	private ServerSocketChannel ssc;
