@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="ricm.channels.applications/echo"/>
+	<classpathentry kind="src" path="ricm.channels.applications/fileserver"/>
+	<classpathentry kind="src" path="ricm.channels.impl.local/middleware"/>
+	<classpathentry kind="src" path="ricm.channels/src"/>
+	<classpathentry kind="src" path="ricm.nio.babysteps/babysteps"/>
+	<classpathentry kind="output" path="ricm.channels/bin"/>
+</classpath>
